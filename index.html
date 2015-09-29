@@ -6,107 +6,106 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Icon project</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="search.css">
   </head>
   <body>
-    <style type="text/css">
-      .icon-preview-FatCow_Icons32x32 {
-        padding: 16px;
-      }
-      .icon-preview-FatCow_Icons16x16 {
-        padding: 8px;
-      }
-      .icon-preview:hover {
-        background-color:#ddd;
-      }
-      .icon-preview-success {
-        background-color:#0f0;
-      }
-    </style>
-    <div class="container" id='app'>
-      <br/>
-      <h3>The easiest way to iconize your application!</h3>
-      <br/>
-      <div class="form-inline">
-        <label for="query">Query</label>
-        <input class="form-control" v-model="query" id='query' placeholder="Search an icon" v-el="queryEl">
-        <label for="threshold">Threshold</label>
-        <input class="form-control" style="width:50px" v-model="threshold" id='threshold' placeholder="Search an icon" v-el="queryEl">
-        <label for="folder">Size</label>
-        <select class="form-control" v-model="folder" id="folder">
-          <option>FatCow_Icons32x32</option>
-          <option>FatCow_Icons16x16</option>
-        </select>
-        <label for="mode">Mode</label>
-        <select class="form-control" v-model="mode" id="mode">
-          <option>Javascript</option>
-          <option>Link</option>
-          <option>Filename</option>
-          <option>Image</option>
-        </select>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/0.12.16/vue.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/superagent/1.2.0/superagent.js"></script>
 
+    <div class="container" id='app'>
+
+      <h3><img src="FatCow_Icons32x32/fatcow.png" class="heading" />The easiest way to iconize your application!</h3>
+      <ul class="nav nav-tabs">
+        <li role="presentation" v-repeat="item: menu" v-class="active: active == item"><a href="#" v-on="click:active = item">{{item}}</a></li>
+      </ul>
+      <br/>
+
+    <div class="container" v-show='active == "About"'>
+      <h4>How to use</h4>
+      <ul class="list-group">
+        <li class="list-group-item">Configure result contents</li>
+        <li class="list-group-item">Search icons by keyword</li>
+        <li class="list-group-item">Click on icon to copy to clipboard result</li>
+      </ul>
+      <a href='#' class="btn btn-success" v-on="click: active = 'Configure'" >Go to configuration >></a>
+      <br/>
+      <br/>
+
+      <h4>These icon sets are licensed under a Creative Commons Attribution 3.0 License.</h4>
+        This means you can freely use these icons for any purpose, private and commercial, including online services, templates, themes and software.<br/>
+        However, you should include a link to the page <a href=http://www.fatcow.com/free-icons>http://www.fatcow.com/free-icons</a> in your credits (software or website). <br/>
+        The icons may not be resold, sub-licensed, rented, transferred or otherwise made available for use.<br/>
+        Please link to this page on fatcow.com if you would like to spread the word.<br/>
+        <br/>
+      <h4>Other sources of icon application</h4>
+      <ul class="list-group">
+        <li class="list-group-item"><a href=http://getbootstrap.com>Bootstrap</a> - user interface</li>
+        <li class="list-group-item"><a href=http://vuejs.org>Vue.js</a> - javascript logic</li>
+        <li class="list-group-item"><a href=http://zeroclipboard.org>ZeroClipboard</a> - clipboard framework</li>
+      </ul>
+    </div>
+    <div class="form-horizontal" v-show='active == "Configure"'>
+
+      <div class="form-group">
+        <label for="base" class="col-sm-2 control-label">Base Url</label>
+        <div class="col-sm-10">
+          <input class="form-control" v-model="base" id='base' placeholder="Search an icon" >
+        </div>
       </div>
+
+      <div class="form-group">
+        <label for="threshold" class="col-sm-2 control-label">Threshold</label>
+        <div class="col-sm-10">
+          <input class="form-control" v-model="threshold" id='threshold' placeholder="Search an icon" >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="folder" class="col-sm-2 control-label">Size</label>
+        <div class="col-sm-10">
+          <select class="form-control" v-model="folder" id="folder">
+            <option>FatCow_Icons32x32</option>
+            <option>FatCow_Icons16x16</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="mode" class="col-sm-2 control-label">Mode</label>
+        <div class="col-sm-10">
+          <select class="form-control" v-model="mode" id="mode">
+            <option>Javascript</option>
+            <option>Link</option>
+            <option>Filename</option>
+            <option>Image</option>
+          </select>
+          <div v-show="mode == 'Javascript'">
+          <br/>
+          Don't forget do append javascript library:<br/>
+          &lt;script type="text/javascript" src="{{base}}icon.js"&gt;
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10">
+          <a href='#' class="btn btn-success" v-on="click: active = 'Search'" >Go to search >></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="form" v-show='active == "Search"'>
+      <input class="form-control" v-model="query" id='query' placeholder="Enter keywords" v-el="query" focus>
       <br/>
       <h5>Click on an icon to copy configuration</h5>
       <ul class="list-inline">
         <li v-repeat="resultList">
-          <img v-attr="src:'./' + folder + '/' + $value, name: $value" class="icon-preview icon-preview-{{folder}}" v-on="click: copyIcon"/>
+          <img v-attr="src:makeUrl($value), name: $value" class="icon-preview icon-preview-{{folder}}" v-on="click: copyIcon"/>
         </li>
-      </div>
-      <div v-text="resultList|json">
-      
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/0.12.16/vue.min.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/superagent/1.2.0/superagent.js"></script>
-      <script type="text/javascript">
-        var app = new Vue({
-          el:'#app',
-          data: {
-            base: document.location + '',
-            query:'',
-            iconList: [],
-            threshold: 50,
-            mode: 'js',
-            folder: 'FatCow_Icons32x32',
-            mode:'Javascript'
-          },
-          computed: {
-            resultList: function() {
-              if(!this.query.length) {
-                return [];
-              }
-              var result = [];
-              this.iconList.forEach(function(icon) {
-                  if(result.length < this.threshold && icon.indexOf(this.query) != -1) {
-                    result.push(icon);
-                  }
-              }.bind(this));
-              return result;
-            }
-          },
-          methods: {
-            copyIcon: function(e) {
-              var result, name = e.target.name
-              if(this.mode == 'Javascript') {
-                if(this.folder == 'FatCow_Icons32x32') {
-                  result = 'icon.big("' + name + '")';
-                } else if(this.folder == 'FatCow_Icons16x16') {
-                  result = 'icon.small("' + name + '")';
-                } 
-              } else if(this.mode == 'Filename') {
-                result = name;
-              } else if(this.mode == 'Image') {
-                result = '<img src="' + this.base + this.folder + '/' + name + '" />';
-              } else if(this.mode == 'Link') {
-                result = this.base + this.folder + '/' + name;
-              }
-              alert(result);
-            }
-          }
-        });
+        </ul>
+    </div>
 
-        superagent.get('filename-list.txt').end(function(err, res) {
-          app.iconList = res.text.split("\r\n");
-        });
-      </script>
-
+    <script type="text/javascript" src="search.js"></script>
   </body>
 </html>

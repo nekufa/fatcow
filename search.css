@@ -1,0 +1,15 @@
+.heading {
+  padding: 8px;
+}
+.icon-preview-FatCow_Icons32x32 {
+  padding: 16px;
+}
+.icon-preview-FatCow_Icons16x16 {
+  padding: 8px;
+}
+.icon-preview:hover {
+  background-color:#ddd;
+}
+.icon-preview-success {
+  background-color:#0f0;
+}
