@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Icon project</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  </head>
+  <body>
+    <style type="text/css">
+      .icon-preview-FatCow_Icons32x32 {
+        padding: 16px;
+      }
+      .icon-preview-FatCow_Icons16x16 {
+        padding: 8px;
+      }
+      .icon-preview:hover {
+        background-color:#ddd;
+      }
+      .icon-preview-success {
+        background-color:#0f0;
+      }
+    </style>
+    <div class="container" id='app'>
+      <br/>
+      <h3>The easiest way to iconize your application!</h3>
+      <br/>
+      <div class="form-inline">
+        <label for="query">Query</label>
+        <input class="form-control" v-model="query" id='query' placeholder="Search an icon" v-el="queryEl">
+        <label for="threshold">Threshold</label>
+        <input class="form-control" style="width:50px" v-model="threshold" id='threshold' placeholder="Search an icon" v-el="queryEl">
+        <label for="folder">Size</label>
+        <select class="form-control" v-model="folder" id="folder">
+          <option>FatCow_Icons32x32</option>
+          <option>FatCow_Icons16x16</option>
+        </select>
+        <label for="mode">Mode</label>
+        <select class="form-control" v-model="mode" id="mode">
+          <option>Javascript</option>
+          <option>Link</option>
+          <option>Filename</option>
+          <option>Image</option>
+        </select>
+
+      </div>
+      <br/>
+      <h5>Click on an icon to copy configuration</h5>
+      <ul class="list-inline">
+        <li v-repeat="resultList">
+          <img v-attr="src:'./' + folder + '/' + $value, name: $value" class="icon-preview icon-preview-{{folder}}" v-on="click: copyIcon"/>
+        </li>
+      </div>
+      <div v-text="resultList|json">
+      
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/0.12.16/vue.min.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/superagent/1.2.0/superagent.js"></script>
+      <script type="text/javascript">
+        var app = new Vue({
+          el:'#app',
+          data: {
+            base: document.location + '',
+            query:'',
+            iconList: [],
+            threshold: 50,
+            mode: 'js',
+            folder: 'FatCow_Icons32x32',
+            mode:'Javascript'
+          },
+          computed: {
+            resultList: function() {
+              if(!this.query.length) {
+                return [];
+              }
+              var result = [];
+              this.iconList.forEach(function(icon) {
+                  if(result.length < this.threshold && icon.indexOf(this.query) != -1) {
+                    result.push(icon);
+                  }
+              }.bind(this));
+              return result;
+            }
+          },
+          methods: {
+            copyIcon: function(e) {
+              var result, name = e.target.name
+              if(this.mode == 'Javascript') {
+                if(this.folder == 'FatCow_Icons32x32') {
+                  result = 'icon.big("' + name + '")';
+                } else if(this.folder == 'FatCow_Icons16x16') {
+                  result = 'icon.small("' + name + '")';
+                } 
+              } else if(this.mode == 'Filename') {
+                result = name;
+              } else if(this.mode == 'Image') {
+                result = '<img src="' + this.base + this.folder + '/' + name + '" />';
+              } else if(this.mode == 'Link') {
+                result = this.base + this.folder + '/' + name;
+              }
+              alert(result);
+            }
+          }
+        });
+
+        superagent.get('filename-list.txt').end(function(err, res) {
+          app.iconList = res.text.split("\r\n");
+        });
+      </script>
+
+  </body>
+</html>
