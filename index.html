@@ -26,12 +26,12 @@
           </a>
         </li>
       </ul>
-      <br/>
 
     <div class="container" v-show='active == "About"' v-html="about">
     </div>
 
     <div class="form-horizontal" v-show='active == "Configure"'>
+      <br/>
 
       <div class="form-group">
         <label for="base" class="col-sm-2 control-label">Base Url</label>
@@ -77,6 +77,7 @@
     </div>
 
     <div class="form" v-show='active == "Search"'>
+      <br/>
       <input class="form-control" v-model="query" id='query' placeholder="Enter keywords" v-el="query" focus>
       <br/>
       <h5>Click on an icon to copy configuration</h5>
