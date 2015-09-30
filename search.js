@@ -45,16 +45,16 @@ var app = new Vue({
   },
   methods: {
     makeUrl: function(icon) {
-      return this.base + this.folder + '/' + icon;
+      return this.base + this.folder + '/' + icon + '.png';
     },
     copyIcon: function(e) {
       var name = e.target.name, 
           result = name;
       if(this.mode == 'Javascript') {
         if(this.folder == 'FatCow_Icons32x32') {
-          result = 'icon.big("' + name + '")';
+          result = 'icon.big(\'' + name + '\')';
         } else if(this.folder == 'FatCow_Icons16x16') {
-          result = 'icon.small("' + name + '")';
+          result = 'icon.small(\'' + name + '\')';
         } 
       } else if(this.mode == 'Link') {
         result = this.makeUrl(name);
@@ -70,7 +70,7 @@ var app = new Vue({
 
 superagent.get('filename-list.txt').end(function(err, res) {
   app.iconList = res.text.split("\n").map(function(el) {
-    return el.replace("\r", "");
+    return el.replace('\r', '').replace('.png', '');
   });
 });
 
