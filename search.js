@@ -4,27 +4,42 @@ var app = new Vue({
 
     about: '',
     iconList: [],
-    
+
+    hiddenIconsCount: 0,
+
     menu: ['About', 'Configure', 'Search'],
     active: 'About',
 
-    base: document.location + '',
+    base: (document.location + '').replace('#', ''),
     query:'',
-    threshold: 50,
+    threshold: 100,
     folder: 'FatCow_Icons32x32',
     mode:'Javascript'
   },
+  ready: function() {
+    ['active', 'threshold', 'folder', 'mode'].forEach(function(property) {
+      var cookieName = 'icon-' + property;
+      this.$watch(property, function(value) {
+        Cookies.set(cookieName, value);
+      });
+      if(Cookies(cookieName)) {
+        this[property] = Cookies(cookieName);
+      }
+    }.bind(this));
+  },
   computed: {
     resultList: function() {
-      if(!this.query.length) {
-        return [];
-      }
-      var result = [];
+      var result = [], hidden = 0;
       this.iconList.forEach(function(icon) {
-          if(result.length < this.threshold && icon.indexOf(this.query) != -1) {
-            result.push(icon);
+          if(icon.indexOf(this.query) != -1) {
+            if(result.length < this.threshold) {
+              result.push(icon);
+            } else {
+              hidden++;
+            }
           }
       }.bind(this));
+      this.hiddenIconsCount = hidden;
       return result;
     }
   },
@@ -54,7 +69,9 @@ var app = new Vue({
 });
 
 superagent.get('filename-list.txt').end(function(err, res) {
-  app.iconList = res.text.split("\n");
+  app.iconList = res.text.split("\n").map(function(el) {
+    return el.replace("\r", "");
+  });
 });
 
 superagent.get('README.md').end(function(err, res) {
