@@ -11,6 +11,7 @@
   <body>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/0.12.16/vue.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/superagent/1.2.0/superagent.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/markdown.js/0.5.0/markdown.min.js"></script>
 
     <div class="container" id='app'>
 
@@ -20,30 +21,9 @@
       </ul>
       <br/>
 
-    <div class="container" v-show='active == "About"'>
-      <h4>How to use</h4>
-      <ul class="list-group">
-        <li class="list-group-item">Configure result contents</li>
-        <li class="list-group-item">Search icons by keyword</li>
-        <li class="list-group-item">Click on icon to copy to clipboard result</li>
-      </ul>
-      <a href='#' class="btn btn-success" v-on="click: active = 'Configure'" >Go to configuration >></a>
-      <br/>
-      <br/>
-
-      <h4>These icon sets are licensed under a Creative Commons Attribution 3.0 License.</h4>
-        This means you can freely use these icons for any purpose, private and commercial, including online services, templates, themes and software.<br/>
-        However, you should include a link to the page <a href=http://www.fatcow.com/free-icons>http://www.fatcow.com/free-icons</a> in your credits (software or website). <br/>
-        The icons may not be resold, sub-licensed, rented, transferred or otherwise made available for use.<br/>
-        Please link to this page on fatcow.com if you would like to spread the word.<br/>
-        <br/>
-      <h4>Other sources of icon application</h4>
-      <ul class="list-group">
-        <li class="list-group-item"><a href=http://getbootstrap.com>Bootstrap</a> - user interface</li>
-        <li class="list-group-item"><a href=http://vuejs.org>Vue.js</a> - javascript logic</li>
-        <li class="list-group-item"><a href=http://zeroclipboard.org>ZeroClipboard</a> - clipboard framework</li>
-      </ul>
+    <div class="container" v-show='active == "About"' v-html="about">
     </div>
+
     <div class="form-horizontal" v-show='active == "Configure"'>
 
       <div class="form-group">
