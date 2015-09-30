@@ -4,10 +4,15 @@ var app = new Vue({
 
     about: '',
     iconList: [],
+    appStyle: {display: 'none'},
 
     hiddenIconsCount: 0,
 
-    menu: ['About', 'Configure', 'Search'],
+    menu: [
+      {icon: 'help', name: 'About'},
+      {icon: 'setting_tools', name: 'Configure'},
+      {icon: 'zoom', name: 'Search'}
+    ],
     active: 'About',
 
     base: (document.location + '').replace('#', ''),
@@ -22,8 +27,8 @@ var app = new Vue({
       this.$watch(property, function(value) {
         Cookies.set(cookieName, value);
       });
-      if(Cookies(cookieName)) {
-        this[property] = Cookies(cookieName);
+      if(Cookies.get(cookieName)) {
+        this[property] = Cookies.get(cookieName);
       }
     }.bind(this));
   },
@@ -48,7 +53,7 @@ var app = new Vue({
       return this.base + this.folder + '/' + icon + '.png';
     },
     copyIcon: function(e) {
-      var name = e.target.name, 
+      var name = e.target.title, 
           result = name;
       if(this.mode == 'Javascript') {
         if(this.folder == 'FatCow_Icons32x32') {
@@ -56,10 +61,12 @@ var app = new Vue({
         } else if(this.folder == 'FatCow_Icons16x16') {
           result = 'icon.small(\'' + name + '\')';
         } 
+      } else if(this.mode == 'Filename') {
+        result = name + '.png';
       } else if(this.mode == 'Link') {
         result = this.makeUrl(name);
       } else if(this.mode == 'Image') {
-        result = '<img src="' + this.makeUrl(name) + '" />';
+        result = '<img src=\'' + this.makeUrl(name) + '\'/>';
       }
 
       // todo copy to clipboard
@@ -76,4 +83,5 @@ superagent.get('filename-list.txt').end(function(err, res) {
 
 superagent.get('README.md').end(function(err, res) {
   app.about = markdown.toHTML(res.text);
+  app.appStyle.display = 'block';
 });

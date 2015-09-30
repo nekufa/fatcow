@@ -8,10 +8,13 @@ This projects helps to search icons, prepare data for use them and to serve icon
 
 You can clone repository and make your own icon hosting or use existing one.
 
-## Icon application uses
-- [Bootstrap](getbootstrap.com)
-- [Vue.js](vuejs.org)
-- [FatCow icons](www.fatcow.com/free-icons)
+## 3d party libraries
+- [FatCow icons](http://www.fatcow.com/free-icons)
+- [Bootstrap](http://getbootstrap.com)
+- [Vue.js](http://vuejs.org)
+- [SuperAgent](http://visionmedia.github.io/superagent)
+- [markdown-js](https://github.com/evilstreak/markdown-js)
+- [Cookies.js](https://github.com/ScottHamper/Cookies)
 
 ## Why FatCow?
 FatCow is a leading provider of web hosting, domain registration and related marketing services, and continuously provides great value to its customers, while making a difference inside and outside of the web hosting world. Recently, FatCow committed to powering its offices and data centers with 100% wind energy, and now FatCow is contributing to the web design community!

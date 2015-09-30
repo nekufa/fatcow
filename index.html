@@ -14,11 +14,17 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/markdown.js/0.5.0/markdown.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Cookies.js/1.2.1/cookies.min.js"></script>
 
-    <div class="container" id='app'>
+    <div class="container" id='app' style="display:none" v-style="appStyle">
 
       <h3><img src="FatCow_Icons32x32/fatcow.png" class="heading" />The easiest way to iconize your application!</h3>
       <ul class="nav nav-tabs">
-        <li role="presentation" v-repeat="item: menu" v-class="active: active == item"><a href="#" v-on="click:active = item">{{item}}</a></li>
+        <li role="presentation" v-repeat="item: menu" v-class="active: active == item.name">
+          <a href="#" v-on="click:active = item.name">
+            <img src="FatCow_Icons16x16/{{item.icon}}.png" />
+            &nbsp;
+            {{item.name}}
+          </a>
+        </li>
       </ul>
       <br/>
 
@@ -57,21 +63,15 @@
           <select class="form-control" v-model="mode" id="mode">
             <option>Javascript</option>
             <option>Link</option>
+            <option>Name</option>
             <option>Filename</option>
             <option>Image</option>
           </select>
           <div v-show="mode == 'Javascript'">
           <br/>
-          Don't forget do append javascript library:<br/>
-          &lt;script type="text/javascript" src="{{base}}icon.js"&gt;
+          Don't forget do add javascript library with:<br/>
+          &lt;script type="text/javascript" src="{{base}}icon.js"&gt;&lt;/script&gt;
           </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-10">
-          <a href='#' class="btn btn-success" v-on="click: active = 'Search'" >Go to search >></a>
         </div>
       </div>
     </div>
@@ -82,7 +82,7 @@
       <h5>Click on an icon to copy configuration</h5>
       <ul class="list-inline">
         <li v-repeat="resultList">
-          <img v-attr="src:makeUrl($value), name: $value" class="icon-preview icon-preview-{{folder}}" v-on="click: copyIcon"/>
+          <img v-attr="src:makeUrl($value), title: $value" class="icon-preview icon-preview-{{folder}}" v-on="click: copyIcon"/>
         </li>
         <li v-show="hiddenIconsCount > 0">+ {{hiddenIconsCount}} more icons... </li>
         </ul>
