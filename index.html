@@ -27,7 +27,7 @@
         </li>
       </ul>
 
-    <div class="container" v-show='active == "About"' v-html="about">
+    <div class="container" v-show='active == "About"' v-html="readme">
     </div>
 
     <div class="form-horizontal" v-show='active == "Configure"'>
@@ -76,16 +76,24 @@
       </div>
     </div>
 
-    <div class="form" v-show='active == "Search"'>
+    <div class="container" v-show='active == "Search"'>
       <br/>
-      <input class="form-control" v-model="query" id='query' placeholder="Enter keywords" v-el="query" focus>
+        Enter keywords, find icon and click it to copy data to your clipboard.<br/>
+        Want to customize engine? Go to <a href="#" v-on="click: active='Configure'">configuration tab</a>.
       <br/>
-      <h5>Click on an icon to copy configuration</h5>
-      <ul class="list-inline">
-        <li v-repeat="resultList">
-          <img v-attr="src:makeUrl($value), title: $value" class="icon-preview icon-preview-{{folder}}" v-on="click: copyIcon"/>
+      <br/>
+      <input class="form-control" v-model="query" id='query' placeholder="Query string" v-el="query" focus>
+      <br/>
+      <ul class="list-inline" >
+        <li v-repeat="searchResult">
+          <img v-attr="src:makeUrl($value)" 
+            class="icon-preview icon-preview-{{folder}}" 
+            title="{{$value}}" 
+            v-on="click: copyIcon"/>
         </li>
-        <li v-show="hiddenIconsCount > 0">+ {{hiddenIconsCount}} more icons... </li>
+        <li v-show="hiddenIconsCount > 0">
+          + {{hiddenIconsCount}} more icons ... 
+        </li>
         </ul>
     </div>
 

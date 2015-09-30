@@ -2,26 +2,29 @@ var app = new Vue({
   el:'#app',
   data: {
 
-    about: '',
-    iconList: [],
-    appStyle: {display: 'none'},
-
-    hiddenIconsCount: 0,
-
+    // app state
     menu: [
       {icon: 'help', name: 'About'},
-      {icon: 'setting_tools', name: 'Configure'},
-      {icon: 'zoom', name: 'Search'}
+      {icon: 'zoom', name: 'Search'},
+      {icon: 'setting_tools', name: 'Configure'}
     ],
     active: 'About',
-
-    base: (document.location + '').replace('#', ''),
+    appStyle: {display: 'none'},
     query:'',
+    readme: '',
+    iconList: [],
+    hiddenIconsCount: 0,
+
+    // app configuration
+    base: (document.location + '').replace('#', ''),
     threshold: 100,
     folder: 'FatCow_Icons32x32',
     mode:'Javascript'
   },
+
   ready: function() {
+
+    // register cookies handler and read stored data
     ['active', 'threshold', 'folder', 'mode'].forEach(function(property) {
       var cookieName = 'icon-' + property;
       this.$watch(property, function(value) {
@@ -31,9 +34,23 @@ var app = new Vue({
         this[property] = Cookies.get(cookieName);
       }
     }.bind(this));
+
+    // load icons
+    superagent.get('filename-list.txt').end(function(err, res) {
+      this.iconList = res.text.split("\n").map(function(el) {
+        return el.replace('\r', '').replace('.png', '');
+      });
+    }.bind(this));
+
+    // load readme
+    superagent.get('README.md').end(function(err, res) {
+      this.readme = markdown.toHTML(res.text);
+      this.appStyle.display = 'block';
+    }.bind(this));
   },
+
   computed: {
-    resultList: function() {
+    searchResult: function() {
       var result = [], hidden = 0;
       this.iconList.forEach(function(icon) {
           if(icon.indexOf(this.query) != -1) {
@@ -73,15 +90,4 @@ var app = new Vue({
       alert(result);
     }
   }
-});
-
-superagent.get('filename-list.txt').end(function(err, res) {
-  app.iconList = res.text.split("\n").map(function(el) {
-    return el.replace('\r', '').replace('.png', '');
-  });
-});
-
-superagent.get('README.md').end(function(err, res) {
-  app.about = markdown.toHTML(res.text);
-  app.appStyle.display = 'block';
 });
